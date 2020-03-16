@@ -151,3 +151,22 @@ document.querySelector("#add-btn").onclick = function() {
 document.querySelector("#sub-btn").onclick = function() {
   sendTransaction(false);
 };
+
+let db
+const request = indexedDB.open('budgetDB', 1)
+
+request.onupgradeneeded = event => {
+  const db = event.target.result
+  const objectStore = db.createObjectStore('transactions', { autoIncrement: true })
+  objectStore.createIndex('text', 'text')
+}
+
+request.onsuccess = event => {
+  const db = event.target.result
+  const transaction = db.transaction(['transactions'], 'readwrite')
+  const store = transaction.objectStore('transactions')
+  const textIndex = store.index('text')
+}
+request.onerror = event => {
+  console.log('db error')
+}
